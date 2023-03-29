@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-abstract class Delivery
+abstract class Delivery //абстрактный класс
 {
     public string Address;
 }
@@ -41,12 +41,33 @@ public class Price
 public class Costing : Price
 {
     public int cost;
-    public override int Cost 
-    { 
-        get => base.Cost; set => base.Cost = value; 
+    public static int minValue = 0; //Статическая переменная
+    public override int Cost    //Переопределение
+    {
+        get //Использование get set
+        {
+            return cost;
         }
+        set
+        {
+            if (value < minValue)
+            {
+                Console.WriteLine("Цена не может быть меньше 0");
+            }
+            else
+            {
+                cost = value;
+            }
+        }
+    }
 
 }
+
+public class PaymentMethods
+{
+    protected string pymentmethod;  //использование protected
+}
+
 
 
 public class ProductProperties
