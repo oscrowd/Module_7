@@ -63,17 +63,89 @@ public class Costing : Price
 
 }
 
-public class PaymentMethods
+public class PaymentMethods //Способы оплаты заказа
 {
     protected string pymentmethod;  //использование protected
+    private Cash cash;
+    private CreditCard creditCard;
+    //Агрегация
+    public PaymentMethods(string pymentmethod, Cash cash)
+    {
+        this.pymentmethod = pymentmethod;
+        this.cash = cash;
+    }
+    public PaymentMethods(string pymentmethod, CreditCard creditCard)
+    {
+        this.pymentmethod = pymentmethod;
+        this.creditCard = creditCard;
+    }
 }
 
+public class Cash
+{
+    public string currency;
+}
 
+public static class CashExtensions  //расширение
+{
+    public static string CheckCurrency(this string currency)
+    {
+        if (currency == "рубль")
+        {
+            return currency;
+        }
+        else if (currency == "юань")
+        {
+            return currency;
+        }
+        else
+        {
+            return "Рубль";
+        }
+    }
+}
+
+public class CreditCard
+{
+    public string Name;
+    public string Number;
+}
+
+public class CreditCardCollection
+{
+    private CreditCard[] collection;
+    public CreditCardCollection(CreditCard[] collection)
+    { 
+        this.collection = collection;
+    }
+    public CreditCard this[int index]
+    {
+        get
+        {
+            if (index >= 0 && index < collection.Length)
+            {
+                return collection[index];
+            }
+            else 
+            { 
+            return null;
+            }
+        }
+        private set
+        {
+            // Проверяем, чтобы индекс был в диапазоне для массива
+            if (index >= 0 && index < collection.Length)
+            {
+                collection[index] = value;
+            }
+        }
+
+    }
+}
 
 public class ProductProperties
 { 
 }
-
 
 class Order<TDelivery,
 TStruct> where TDelivery : Delivery
@@ -90,16 +162,18 @@ TStruct> where TDelivery : Delivery
         price = new Price();            
     }
 
-    
-
-    //Конструктор
+    //Конструктор и перегрузка
     public Order(int N, string D, double w) 
     {
         Number = N;
         Description = D;
         Weight = w; 
-    }    
-            
+    }
+    public Order(int N, string D)
+    {
+        Number = N;
+        Description = D;
+    }
     public double Weight
     {
         get
